@@ -32,9 +32,23 @@ if 'CODESPACE_NAME' in os.environ:
     codespace_domain = os.getenv("GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN")
     CSRF_TRUSTED_ORIGINS = [f'https://{codespace_name}-8000.{codespace_domain}']
 
+
+INTERNAL_IPS = [
+    "127.0.0.1",
+]
 # Application definition
 
+REST_FRAMEWORK = {
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ]
+}
+
 INSTALLED_APPS = [
+     "daphne",
+    "debug_toolbar",
     "rest_framework",
     "django.contrib.admin",
     "django.contrib.auth",
@@ -47,6 +61,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -63,6 +78,7 @@ ROOT_URLCONF = "hello_world.urls"
 
 TEMPLATES = [
     {
+        
         "BACKEND": "django.template.backends.django.DjangoTemplates",
         "DIRS": [BASE_DIR / "hello_world" / "templates"],
         "APP_DIRS": True,
@@ -78,7 +94,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "hello_world.wsgi.application"
-
+ASGI_APPLICATION = "hello_world.asgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
